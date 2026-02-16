@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Merchandream | Monetiza la Pasión de tu Afición</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-primary': '#E10600', /* Rojo F1 */
+                        'brand-dark': '#8B0000',    /* Rojo Oscuro */
+                        'brand-black': '#000000',
+                        'brand-light': '#FF4444'    /* Rojo Claro */
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            width: 100%;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+
+        /* ACTUALIZADO: Gradiente Rojo F1 */
+        .gradient-brand {
+            background: linear-gradient(135deg, #E10600 0%, #FF4444 30%, #8B0000 70%, #000000 100%);
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* ACTUALIZADO: Sombra roja al hacer hover */
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(225, 6, 0, 0.3);
+        }
+
+        /* FLOATING ELEMENTS - VISIBLE */
+        @keyframes float-basketball {
+
+            0%,
+            100% {
+                transform: translateY(0px) translateX(0px) rotate(0deg);
+            }
+
+            25% {
+                transform: translateY(-18px) translateX(12px) rotate(90deg);
+            }
+
+            50% {
+                transform: translateY(-30px) translateX(-8px) rotate(180deg);
+            }
+
+            75% {
+                transform: translateY(-22px) translateX(10px) rotate(270deg);
+            }
+        }
+
+        @keyframes spin-slow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .floating-element {
+            position: absolute;
+            animation: float-basketball 8s ease-in-out infinite;
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .spinning-ball {
+            animation: spin-slow 20s linear infinite;
+        }
+
+        /* MOBILE MENU */
+        .mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 59;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 55;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+
+        /* HAMBURGER */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 61;
+        }
+
+        /* ACTUALIZADO: Color rojo en hamburger */
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #E10600;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* RESPONSIVE TYPOGRAPHY */
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.5rem !important;
+                line-height: 1.2 !important;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem !important;
+            }
+        }
+
+        /* MODAL CAROUSEL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-center: center;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+        }
+
+        .carousel-img {
+            max-height: 80vh;
+            width: auto;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            color: white;
+            font-size: 2rem;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 50%;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-btn.prev {
+            left: 2rem;
+        }
+
+        .carousel-btn.next {
+            right: 2rem;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 3rem;
+            color: white;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: rotate(90deg);
+        }
+
+        /* TICKET SYSTEM MODIFICADO */
+        .ticket-stack {
+            perspective: 1000px;
+            position: relative;
+            /* CAMBIADO: min-height más bajo por defecto, la altura real se setea por JS */
+            min-height: 600px;
+            transition: height 0.4s ease-out;
+            /* Animación suave de altura */
+        }
+
+        .ticket {
+            position: absolute;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform-origin: center bottom;
+            cursor: pointer;
+        }
+
+        .ticket.active {
+            transform: translateY(0) scale(1) rotateX(0deg);
+            z-index: 10;
+            opacity: 1;
+        }
+
+        .ticket.stacked {
+            transform: translateY(-20px) scale(0.95) rotateX(5deg);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .ticket.hidden {
+            transform: translateY(40px) scale(0.9) rotateX(-10deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .ticket-perforation {
+            position: relative;
+        }
+
+        /* ACTUALIZADO: Perforación roja */
+        .ticket-perforation::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 2px;
+            background-image: linear-gradient(to right, #E10600 50%, transparent 50%);
+            background-size: 10px 2px;
+            background-repeat: repeat-x;
+        }
+
+        /* ACTUALIZADO: Header rojo */
+        .ticket-header {
+            background: linear-gradient(135deg, #E10600, #FF4444);
+            border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
+            color: white;
+        }
+
+        .ticket-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
+
+        /* NUEVO: Contenedor de botones mejorado para visibilidad */
+        .nav-buttons-container {
+            position: relative;
+            z-index: 100;
+            /* Asegura que esté siempre encima de las cartas */
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            /* Fondo sutil por si una carta muy larga pasa por debajo */
+            background: rgba(15, 23, 42, 0.95);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-btn {
+            background: #E10600;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #FF4444;
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            background: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: scale(1);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-white">
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full top-0 z-50 bg-slate-950 border-b border-slate-800">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="text-2xl font-black">
+                <span class="text-brand-primary">MERCHANDREAM</span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#inicio"
+                    class="text-sm font-medium text-gray-300 hover:text-brand-primary transition-colors">Inicio</a>
+                <a href="#productos"
+                    class="text-sm font-medium text-gray-300 hover:text-brand-primary transition-colors">Productos</a>
+                <a href="#contacto"
+                    class="bg-brand-primary text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-light transition-all">
+                    Contacto
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <div class="md:hidden hamburger" id="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu fixed top-0 left-0 w-full h-screen bg-slate-950" id="mobile-menu">
+        <div class="flex flex-col items-center justify-center h-full space-y-8 text-center px-6">
+            <a href="#inicio"
+                class="text-2xl font-semibold text-white hover:text-brand-primary transition-colors mobile-menu-link">Inicio</a>
+            <a href="#productos"
+                class="text-2xl font-semibold text-white hover:text-brand-primary transition-colors mobile-menu-link">Productos</a>
+            <a href="#contacto"
+                class="text-2xl font-semibold text-white hover:text-brand-primary transition-colors mobile-menu-link">Contacto</a>
+        </div>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section id="inicio" class="gradient-brand min-h-screen flex items-center justify-center relative overflow-hidden">
+        <!-- Animated Floating Elements F1 -->
+        <div class="floating-element spinning-ball" style="top: 12%; left: 7%; font-size: 8rem;">🏎️</div>
+        <div class="floating-element" style="top: 62%; right: 10%; font-size: 7rem; animation-delay: 2s;">🏁</div>
+        <div class="floating-element spinning-ball"
+            style="top: 38%; right: 15%; font-size: 6rem; animation-delay: 1.5s;">🏆</div>
+        <div class="floating-element" style="bottom: 15%; left: 12%; font-size: 7rem; animation-delay: 3s;">🏴</div>
+        <div class="floating-element spinning-ball" style="top: 25%; right: 8%; font-size: 5rem; animation-delay: 4s;">
+            ⚡</div>
+
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-brand-primary rounded-full blur-3xl"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-brand-black rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="container mx-auto px-4 sm:px-6 py-12 sm:py-20 relative z-10">
+            <div class="text-center max-w-5xl mx-auto">
+                <h1 class="hero-title text-5xl sm:text-6xl md:text-7xl font-black mb-6 leading-tight">
+                    Monetiza la Pasión
+                </h1>
+                <!-- CAMBIADO: text-orange-200 a text-red-200 -->
+                <p class="hero-subtitle text-xl md:text-2xl mb-8 text-red-200 font-semibold px-2">
+                    Soluciones premium de merchandising deportivo
+                </p>
+                <p class="text-lg md:text-xl mb-12 text-gray-200 max-w-3xl mx-auto px-4">
+                    Transformamos la conexión emocional con tu club en experiencias memorables y altamente rentables.
+                    Creamos productos que inmortalizan momentos únicos y generan ingresos sostenibles.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-6 justify-center px-4">
+                    <a href="#productos"
+                        class="bg-brand-primary hover:bg-brand-light text-white font-bold py-4 px-8 rounded-full text-lg transition-all hover:scale-105 shadow-2xl">
+                        Ver Catálogo de Productos
+                    </a>
+                    <a href="#contacto"
+                        class="glass-effect hover:bg-white hover:text-brand-black font-bold py-4 px-8 rounded-full text-lg transition-all border-2 border-white">
+                        Solicitar Presupuesto
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LUCKY DOLLS SECTION -->
+    <section id="productos" class="py-16 sm:py-24 bg-slate-900">
+        <div class="container mx-auto px-4 sm:px-6">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-center mb-4">
+                Nuestros Productos <span class="text-brand-primary">Premium</span>
+            </h2>
+            <p class="text-center text-gray-400 mb-4 sm:mb-6 text-base sm:text-lg max-w-3xl mx-auto px-4">
+                Desde muñecos coleccionables hasta réplicas a tamaño real de tus ídolos
+            </p>
+            <p class="text-center text-yellow-400 font-semibold mb-12 sm:mb-16 text-sm sm:text-base px-4">
+                💰 Todos los precios son NETOS (sin IVA)
+            </p>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+
+                <!-- 8 cm -->
+                <div class="glass-effect rounded-2xl p-6 sm:p-8 hover-lift cursor-pointer"
+                    onclick="openCarousel('8cm')">
+                    <div
+                        class="bg-brand-primary rounded-xl p-4 mb-6 h-48 flex items-center justify-center overflow-hidden">
+                        <img src="assets/luckyDolls/8cm/Pic01.png" alt="8cm Lucky Doll" class="h-full object-contain">
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-3">Lucky Doll 8 cm</h3>
+                    <p class="text-sm sm:text-base text-gray-400 mb-4">Ideal para coleccionables del club</p>
+                    <div class="border-t border-gray-700 pt-4">
+                        <p class="text-2xl sm:text-3xl font-black text-brand-primary mb-1">5,25€ <span
+                                class="text-xs sm:text-sm text-gray-500">/unidad</span></p>
+                        <p class="text-xs text-yellow-400 mb-2">+ IVA</p>
+                        <p class="text-xs sm:text-sm text-gray-400">Pedido mínimo: 100 unidades</p>
+                    </div>
+                    <p class="text-xs text-center mt-4 text-brand-primary">👆 Click para ver más fotos</p>
+                </div>
+
+                <!-- 15 cm -->
+                <div class="glass-effect rounded-2xl p-6 sm:p-8 hover-lift cursor-pointer"
+                    onclick="openCarousel('15cm')">
+                    <div
+                        class="bg-brand-black rounded-xl p-4 mb-6 h-48 flex items-center justify-center overflow-hidden">
+                        <img src="assets/luckyDolls/14cm/Pic03.png" alt="15cm Lucky Doll" class="h-full object-contain">
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-3">Lucky Doll 15 cm</h3>
+                    <p class="text-sm sm:text-base text-gray-400 mb-4">Ideal para merchandising en tienda oficial y
+                        eventos especiales</p>
+                    <div class="border-t border-gray-700 pt-4">
+                        <p class="text-2xl sm:text-3xl font-black text-brand-primary mb-1">9,86€ <span
+                                class="text-xs sm:text-sm text-gray-500">/unidad</span></p>
+                        <p class="text-xs text-yellow-400 mb-2">+ IVA</p>
+                        <p class="text-xs sm:text-sm text-gray-400">Pedido mínimo: 100 unidades</p>
+                    </div>
+                    <p class="text-xs text-center mt-4 text-brand-primary">👆 Click para ver más fotos</p>
+                </div>
+
+                <!-- 18 cm -->
+                <div class="glass-effect rounded-2xl p-6 sm:p-8 hover-lift border-2 border-brand-primary cursor-pointer relative"
+                    onclick="openCarousel('18cm')">
+                    <div
+                        class="absolute top-4 right-4 bg-brand-primary text-white px-3 py-1 rounded-full text-xs font-bold">
+                        MÁS VENDIDO
+                    </div>
+                    <div
+                        class="bg-brand-primary rounded-xl p-4 mb-6 h-48 flex items-center justify-center overflow-hidden">
+                        <img src="assets/luckyDolls/18cm/Pic02.png" alt="18cm Lucky Doll" class="h-full object-contain">
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-3">Lucky Doll 18 cm</h3>
+                    <p class="text-sm sm:text-base text-gray-400 mb-4">El formato estrella para coleccionistas y
+                        aficionados</p>
+                    <div class="border-t border-gray-700 pt-4">
+                        <p class="text-2xl sm:text-3xl font-black text-brand-primary mb-1">11,20€ <span
+                                class="text-xs sm:text-sm text-gray-500">/unidad</span></p>
+                        <p class="text-xs text-yellow-400 mb-2">+ IVA</p>
+                        <p class="text-xs sm:text-sm text-gray-400">Pedido mínimo: 100 unidades</p>
+                    </div>
+                    <p class="text-xs text-center mt-4 text-brand-primary">👆 Click para ver más fotos</p>
+                </div>
+
+                <!-- 18 cm con Sonido -->
+                <div class="glass-effect rounded-2xl p-6 sm:p-8 hover-lift cursor-pointer"
+                    onclick="openCarousel('18cmSonido')">
+                    <div
+                        class="bg-gradient-to-br from-brand-primary to-brand-black rounded-xl p-4 mb-6 h-48 flex items-center justify-center overflow-hidden">
+                        <img src="assets/luckyDolls/18cmSonido/Pic01.png" alt="18cm Sonido Lucky Doll"
+                            class="h-full object-contain">
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-3">Lucky Doll 18 cm + Sonido</h3>
+                    <p class="text-sm sm:text-base text-gray-400 mb-4">Con cánticos personalizados o himnos del club</p>
+                    <div class="border-t border-gray-700 pt-4">
+                        <p class="text-2xl sm:text-3xl font-black text-brand-primary mb-1">14,90€ <span
+                                class="text-xs sm:text-sm text-gray-500">/unidad</span></p>
+                        <p class="text-xs text-yellow-400 mb-2">+ IVA</p>
+                        <p class="text-xs sm:text-sm text-gray-400">Pedido mínimo: 100 unidades</p>
+                    </div>
+                    <p class="text-xs text-center mt-4 text-brand-primary">👆 Click para ver más fotos</p>
+                </div>
+
+                <!-- 40 cm -->
+                <div class="glass-effect rounded-2xl p-6 sm:p-8 hover-lift cursor-pointer"
+                    onclick="openCarousel('40cm')">
+                    <div class="bg-slate-800 rounded-xl p-4 mb-6 h-48 flex items-center justify-center overflow-hidden">
+                        <img src="assets/luckyDolls/40cm/Pic01.png" alt="40cm Lucky Doll" class="h-full object-contain">
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-3">Lucky Doll 40 cm</h3>
+                    <p class="text-sm sm:text-base text-gray-400 mb-4">Edición premium para palcos VIP y regalos
+                        institucionales</p>
+                    <div class="border-t border-gray-700 pt-4">
+                        <p class="text-2xl sm:text-3xl font-black text-brand-primary mb-1">75,00€ <span
+                                class="text-xs sm:text-sm text-gray-500">/unidad</span></p>
+                        <p class="text-xs text-yellow-400 mb-2">+ IVA</p>
+                        <p class="text-xs sm:text-sm text-gray-400">Pedido mínimo: 50 unidades</p>
+                    </div>
+                    <p class="text-xs text-center mt-4 text-brand-primary">👆 Click para ver más fotos</p>
+                </div>
+
+                <!-- Tamaño Real -->
+                <div class="glass-effect rounded-2xl p-6 sm:p-8 hover-lift bg-gradient-to-br from-slate-900 to-brand-black border-2 border-brand-primary cursor-pointer relative"
+                    onclick="openCarousel('real')">
+                    <div
+                        class="absolute top-4 right-4 bg-brand-primary text-white px-3 py-1 rounded-full text-xs font-bold">
+                        EXCLUSIVO
+                    </div>
+                    <div class="bg-slate-950 rounded-xl p-4 mb-6 h-48 flex items-center justify-center overflow-hidden">
+                        <img src="assets/luckyDolls/Real/Pic01.png" alt="Tamaño Real" class="h-full object-contain">
+                    </div>
+                    <h3 class="text-xl sm:text-2xl font-bold mb-3">Réplica Tamaño Real</h3>
+                    <p class="text-sm sm:text-base text-gray-400 mb-4">Para museo del club, hall del estadio o
+                        activaciones especiales</p>
+                    <div class="border-t border-gray-700 pt-4">
+                        <p class="text-2xl sm:text-3xl font-black text-brand-primary mb-1">4.100€ <span
+                                class="text-xs sm:text-sm text-gray-500">/unidad</span></p>
+                        <p class="text-xs text-yellow-400 mb-2">+ IVA</p>
+                        <p class="text-xs sm:text-sm text-gray-400">Disponible desde 1 unidad</p>
+                    </div>
+                    <p class="text-xs text-center mt-4 text-brand-primary">👆 Click para ver más fotos</p>
+                </div>
+
+                <!-- Vintage (CAMBIADO: Fondo bg-red-900) -->
+                <div class="glass-effect rounded-2xl p-6 sm:p-8 hover-lift col-span-full cursor-pointer"
+                    onclick="openCarousel('vintage')">
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div class="bg-red-900 rounded-xl p-4 h-64 flex items-center justify-center overflow-hidden">
+                            <img src="assets/luckyDolls/Vintages/Pic01.png" alt="Vintage Collection"
+                                class="h-full object-contain">
+                        </div>
+                        <div>
+                            <h3 class="text-2xl sm:text-3xl font-bold mb-4">Colección Vintage</h3>
+                            <p class="text-sm sm:text-base text-gray-300 mb-6 lg:text-lg">
+                                Homenaje a las leyendas con diseños retro que evocan las épocas doradas.
+                                Perfectos para aniversarios del club o campañas nostálgicas.
+                            </p>
+                            <div class="flex gap-6 flex-wrap">
+                                <div>
+                                    <p class="text-xl sm:text-2xl font-black text-brand-primary">7,25€</p>
+                                    <p class="text-xs text-yellow-400">+ IVA</p>
+                                    <p class="text-xs sm:text-sm text-gray-400">100 unidades</p>
+                                </div>
+                                <div>
+                                    <p class="text-xl sm:text-2xl font-black text-brand-primary">6,72€</p>
+                                    <p class="text-xs text-yellow-400">+ IVA</p>
+                                    <p class="text-xs sm:text-sm text-gray-400">250 unidades</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-center mt-6 text-brand-primary">👆 Click para ver más fotos</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESO DE PRODUCCIÓN -->
+    <section class="py-16 sm:py-24 bg-slate-950">
+        <div class="container mx-auto px-4 sm:px-6">
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-center mb-12 sm:mb-16">
+                Proceso de <span class="text-brand-primary">Producción</span>
+            </h2>
+
+            <div class="max-w-5xl mx-auto">
+                <div class="grid sm:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div
+                            class="bg-brand-primary w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl sm:text-4xl font-black text-white">
+                            1
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-bold mb-4">Molde Personalizado</h3>
+                        <p class="text-4xl sm:text-5xl font-black text-brand-primary mb-2">15 días</p>
+                        <p class="text-sm sm:text-base text-gray-400">Diseño y validación del prototipo exclusivo para
+                            tu club</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-brand-black border-2 border-brand-primary w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl sm:text-4xl font-black text-white">
+                            2
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-bold mb-4">Fabricación</h3>
+                        <p class="text-4xl sm:text-5xl font-black text-brand-primary mb-2">45-60 días</p>
+                        <p class="text-sm sm:text-base text-gray-400">Producción con control de calidad en cada fase</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="bg-brand-primary w-20 h-20 sm:w-24 sm:h-24 rounded-full flex items-center justify-center mx-auto mb-6 text-3xl sm:text-4xl font-black text-white">
+                            3
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-bold mb-4">Transporte</h3>
+                        <p class="text-4xl sm:text-5xl font-black text-brand-primary mb-2">25 días</p>
+                        <p class="text-sm sm:text-base text-gray-400">Envío seguro hasta destino</p>
+                    </div>
+                </div>
+
+                <div class="mt-12 sm:mt-16 glass-effect rounded-2xl p-6 sm:p-8 text-center">
+                    <p class="text-xl sm:text-2xl font-bold mb-4">⏱️ Tiempo Total Estimado</p>
+                    <p class="text-4xl sm:text-6xl font-black text-brand-primary">85-100 días</p>
+                    <p class="text-sm sm:text-base text-gray-400 mt-4">Ideal para planificar campañas de temporada o
+                        aniversarios</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WEEKEND EXPERIENCE - TICKET SYSTEM -->
+
+    <!-- CONTACTO SECTION -->
+    <section id="contacto" class="py-24 bg-slate-950">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-black mb-6 text-white">
+                    Hablemos de tu Club
+                </h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    Agenda una presentación personalizada sin compromiso
+                </p>
+            </div>
+
+            <div class="glass-effect rounded-3xl p-8 sm:p-12 max-w-3xl mx-auto">
+                <div class="flex flex-col gap-6 mb-8">
+                    <div class="text-center">
+                        <p class="text-sm text-gray-400 mb-2">Email</p>
+                        <p class="text-lg sm:text-xl font-semibold text-white break-all"><a
+                                href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                data-cfemail="e7838e958284848e8889c98082898295868ba78a8295848f8689839582868ac984888a"><span
+                                    class="__cf_email__"
+                                    data-cfemail="afcbc6ddcaccccc6c0c181c8cac1caddcec3efc2caddccc7cec1cbddcacec281cadc">direccion.general@merchandream.es</span></a>
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-sm text-gray-400 mb-2">Teléfono</p>
+                        <p class="text-lg sm:text-xl font-semibold text-white">+34 605 19 57 44</p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="mailto:direccion.general@merchandream.es?subject=Presupuesto%20Sporting%20de%20Gijón&body=Hola,%20quiero%20solicitar%20un%20presupuesto%20personalizado%20para%20Lucky%20Dolls%20oficiales."
+                        target="_blank" rel="noopener noreferrer"
+                        class="bg-brand-primary text-white font-bold py-4 px-8 rounded-full text-lg hover:bg-brand-light transition-all text-center shadow-lg">
+                        📧 Enviar Email
+                    </a>
+                    <a href="https://wa.me/34605195744?text=Hola,%20estoy%20interesado%20en%20conocer%20más%20sobre%20Merchandream"
+                        target="_blank" rel="noopener noreferrer"
+                        class="bg-white border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white font-bold py-4 px-8 rounded-full text-lg transition-all text-center shadow-lg">
+                        💬 WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 border-t border-slate-800 bg-brand-black">
+        <div class="container mx-auto px-4 sm:px-6 text-center">
+            <div class="text-3xl font-black mb-4">
+                <span class="text-brand-primary">MERCHANDREAM</span>
+            </div>
+            <p class="text-gray-400 text-sm mb-4">
+                Soluciones de monetización para clubes deportivos
+            </p>
+            <p class="text-gray-500 text-xs">
+                &copy; 2026 Merchandream. Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+
+    <!-- MODAL CAROUSEL -->
+    <div id="carouselModal" class="modal">
+        <span class="close-modal" onclick="closeCarousel()">&times;</span>
+        <button class="carousel-btn prev" onclick="changeSlide(-1)">&#10094;</button>
+        <div class="modal-content">
+            <img id="carouselImage" class="carousel-img" src="" alt="Lucky Doll">
+            <p class="text-center text-white mt-4 text-base" id="carouselCounter"></p>
+        </div>
+        <button class="carousel-btn next" onclick="changeSlide(1)">&#10095;</button>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        // CAROUSEL DATA
+        const carouselData = {
+            '8cm': [
+                'assets/luckyDolls/8cm/Pic01.png',
+                'assets/luckyDolls/8cm/Pic02.png',
+                'assets/luckyDolls/8cm/Pic03.png',
+                'assets/luckyDolls/8cm/Pic04.png',
+                'assets/luckyDolls/8cm/Pic05.png',
+                'assets/luckyDolls/8cm/Pic06.png',
+                'assets/luckyDolls/8cm/Pic07.png'
+            ],
+            '15cm': [
+                'assets/luckyDolls/14cm/Pic03.png',
+                'assets/luckyDolls/14cm/Pic05.png',
+                'assets/luckyDolls/14cm/Pic07.png'
+            ],
+            '18cm': [
+                'assets/luckyDolls/18cm/Pic02.png',
+                'assets/luckyDolls/18cm/Pic03.png',
+                'assets/luckyDolls/18cm/Pic04.png'
+            ],
+            '18cmSonido': [
+                'assets/luckyDolls/18cmSonido/Pic01.png'
+            ],
+            '40cm': [
+                'assets/luckyDolls/40cm/Pic01.png'
+            ],
+            'real': [
+                'assets/luckyDolls/Real/Pic01.png',
+                'assets/luckyDolls/Real/Pic02.jpg',
+                'assets/luckyDolls/Real/Pic03.jpg'
+            ],
+            'vintage': [
+                'assets/luckyDolls/Vintages/Pic01.png',
+                'assets/luckyDolls/Vintages/Pic02.png',
+                'assets/luckyDolls/Vintages/Pic03.png',
+                'assets/luckyDolls/Vintages/Pic04.png',
+                'assets/luckyDolls/Vintages/Pic05.png',
+                'assets/luckyDolls/Vintages/Pic06.png',
+                'assets/luckyDolls/Vintages/Pic07.png',
+                'assets/luckyDolls/Vintages/Pic08.png',
+                'assets/luckyDolls/Vintages/Pic09.png',
+                'assets/luckyDolls/Vintages/Pic10.png',
+                'assets/luckyDolls/Vintages/Pic11.png',
+                'assets/luckyDolls/Vintages/Pic12.png',
+                'assets/luckyDolls/Vintages/Pic13.png',
+                'assets/luckyDolls/Vintages/Pic14.png',
+                'assets/luckyDolls/Vintages/Pic15.png',
+                'assets/luckyDolls/Vintages/Pic16.png',
+                'assets/luckyDolls/Vintages/Pic17.png'
+            ]
+        };
+
+        let currentCategory = '';
+        let currentIndex = 0;
+
+        function openCarousel(category) {
+            currentCategory = category;
+            currentIndex = 0;
+            const modal = document.getElementById('carouselModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            updateCarousel();
+        }
+
+        function closeCarousel() {
+            const modal = document.getElementById('carouselModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function changeSlide(direction) {
+            const images = carouselData[currentCategory];
+            currentIndex += direction;
+            if (currentIndex < 0) currentIndex = images.length - 1;
+            if (currentIndex >= images.length) currentIndex = 0;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const images = carouselData[currentCategory];
+            const img = document.getElementById('carouselImage');
+            const counter = document.getElementById('carouselCounter');
+            img.src = images[currentIndex];
+            counter.textContent = `${currentIndex + 1} / ${images.length}`;
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeCarousel();
+        });
+
+        // Close modal on background click
+        document.getElementById('carouselModal').addEventListener('click', function (e) {
+            if (e.target === this) closeCarousel();
+        });
+
+        // Arrow key navigation
+        document.addEventListener('keydown', function (e) {
+            const modal = document.getElementById('carouselModal');
+            if (modal.classList.contains('active')) {
+                if (e.key === 'ArrowLeft') changeSlide(-1);
+                if (e.key === 'ArrowRight') changeSlide(1);
+            }
+        });
+
+        // TICKET SYSTEM
+        let currentTicket = 1;
+        const totalTickets = 7;
+
+        // NUEVO: Función para actualizar la altura del contenedor
+        function updateStackHeight() {
+            const activeTicket = document.querySelector('.ticket.active');
+            const stack = document.getElementById('ticketStack');
+            if (activeTicket && stack) {
+                // Obtener altura del ticket activo
+                const height = activeTicket.offsetHeight;
+                // Establecer altura del stack (con un pequeño margen de seguridad)
+                // Usamos un mínimo de 600px para evitar colapsos visuales extraños en cambios rápidos
+                const finalHeight = Math.max(height + 40, 600);
+                stack.style.height = finalHeight + 'px';
+            }
+        }
+
+        function changeTicket(direction) {
+            const newTicket = currentTicket + direction;
+            if (newTicket < 1 || newTicket > totalTickets) return;
+
+            // Hide current ticket
+            const current = document.querySelector(`.ticket[data-ticket="${currentTicket}"]`);
+            current.classList.remove('active');
+            current.classList.add(direction > 0 ? 'stacked' : 'hidden');
+
+            // Show new ticket
+            currentTicket = newTicket;
+            const next = document.querySelector(`.ticket[data-ticket="${currentTicket}"]`);
+            next.classList.remove('stacked', 'hidden');
+            next.classList.add('active');
+
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentTicket === 1;
+            document.getElementById('nextBtn').disabled = currentTicket === totalTickets;
+
+            // Update text on last ticket
+            if (currentTicket === totalTickets) {
+                document.getElementById('nextBtn').textContent = '✓ Finalizado';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Siguiente →';
+            }
+
+            // Actualizar altura del stack después de un pequeño delay para permitir renderizado
+            setTimeout(updateStackHeight, 50);
+        }
+
+        // Actualizar altura al cargar y al redimensionar
+        window.addEventListener('load', updateStackHeight);
+        window.addEventListener('resize', updateStackHeight);
+
+        // MOBILE MENU LOGIC
+        const menuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        const mobileLinks = document.querySelectorAll('.mobile-menu-link');
+
+        if (menuToggle && mobileMenu && mobileMenuOverlay) {
+            menuToggle.addEventListener('click', function () {
+                menuToggle.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                mobileMenuOverlay.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            });
+
+            mobileMenuOverlay.addEventListener('click', function () {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    menuToggle.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                    mobileMenuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
